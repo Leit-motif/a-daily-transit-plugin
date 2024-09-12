@@ -38,7 +38,7 @@ export default class ICSReaderPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
-		await this.loadEvents();  // Make sure this line is present
+		await this.loadEvents();  // This will run on vault load
 
 		this.addCommand({
 			id: 'insert-todays-events',
@@ -73,6 +73,15 @@ export default class ICSReaderPlugin extends Plugin {
 					});
 				}
 				return eventString;
+			}
+		});
+
+		this.addRibbonIcon('calendar', 'Insert Daily Transits', (evt: MouseEvent) => {
+			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+			if (activeView) {
+				this.insertTodaysEvents(activeView.editor);
+			} else {
+				new Notice('No active markdown view');
 			}
 		});
 
@@ -260,6 +269,17 @@ class ICSReaderSettingTab extends PluginSettingTab {
 						this.plugin.saveSettings();
 						this.display();
 					}).open();
+				}));
+
+		// Add this new setting for the refresh button
+		new Setting(containerEl)
+			.setName('Refresh ICS Events')
+			.setDesc('Manually refresh ICS events')
+			.addButton(button => button
+				.setButtonText('Refresh')
+				.onClick(async () => {
+					await this.plugin.loadEvents();
+					new Notice('ICS events refreshed');
 				}));
 	}
 }
