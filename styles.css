@@ -6,3 +6,20 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+.suggestion-container {
+    position: absolute;
+    background-color: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.suggestion-item {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: var(--background-secondary);
+}
